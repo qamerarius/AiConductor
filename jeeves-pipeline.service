@@ -1,0 +1,36 @@
+[Unit]
+Description=Jeeves Memory Pipeline
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=jeeves-pipeline
+Group=jeeves-pipeline
+WorkingDirectory=/opt/jeeves-pipeline
+Environment="PYTHONPATH=/opt/jeeves-pipeline"
+Environment="JEEVES_CONFIG=/opt/jeeves-pipeline/config/config.yaml"
+EnvironmentFile=/etc/jeeves-pipeline/secrets.env
+ExecStart=/opt/jeeves-pipeline/venv/bin/uvicorn \
+    main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 2 \
+    --log-level info \
+    --access-log
+ExecStop=/bin/kill -s TERM $MAINPID
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/jeeves-pipeline
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

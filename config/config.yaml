@@ -1,0 +1,42 @@
+services:
+  jeeves_ollama:
+    host: 192.168.2.2
+    port: 11434
+    model: jeeves:latest
+    timeout: 600
+
+  embedding_ollama:
+    host: 192.168.2.2
+    port: 11434
+    model: nomic-embed-text:latest
+    timeout: 600
+
+  qdrant:
+    host: 192.168.2.3
+    port: 6333
+    collection: jeeves_episodic
+
+  searxng:
+    host: 192.168.2.7
+    port: 8888
+    enabled: true
+    results: 3
+
+pipeline:
+  memory_results: 5
+  min_relevance_score: 0.65
+  max_context_tokens: 2000
+  max_message_length: 32000
+  rate_limit: 30/minute
+
+security:
+  api_key_header: X-API-Key
+  allowed_origins:
+    - http://jeeves-services.local
+    - http://jeeves-services.local:3000
+
+logging:
+  level: INFO
+  path: /var/log/jeeves-pipeline/pipeline.log
+  max_size_mb: 100
+  backup_count: 10
