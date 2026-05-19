@@ -57,16 +57,24 @@ class SearchEngine:
                         "model": model,
                         "prompt": (
                             f"Convert this message into a concise web search query."
-                            f"Return only the search query, "
-                            f"nothing else. /no_think\n\nMessage: {message}"
+                            f"Return only the search query, nothing else.\n\n "
+                            f"Message: {message}"
                         ),
+                        "think": False,
                         "stream": False,
                         "options": {"num_predict": 4096}
                     }
                 )
                 response.raise_for_status()
                 data = response.json()
-                refined = data.get("thinking").strip()
+                # self.logger.info(f"Refinement raw response: {data}")
+                refined = data.get("response").strip()
+
+                # If response is empty check thinking field as fallback
+                if not refined:
+                    refined = data.get("thinking").strip()
+                    if refined:
+                        self.logger.info("Query came from thinking field")
 
                 # Fall back to original message if refinement returns empty
                 if not refined:

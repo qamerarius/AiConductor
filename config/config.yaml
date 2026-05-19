@@ -2,7 +2,7 @@ services:
   jeeves_ollama:
     host: 192.168.2.2
     port: 11434
-    model: jeeves:latest
+    model: gemma4:31b
     timeout: 600
 
   embedding_ollama:

@@ -12,7 +12,7 @@ from typing import Optional
 
 import httpx
 from qdrant_client import QdrantClient, models
-
+from datetime import datetime
 
 class MemoryManager:
 
@@ -167,8 +167,9 @@ class MemoryManager:
     ) -> list[dict]:
 
         memory_text = self._format_memories(memories) if memories else ""
-
+        current_time = datetime.now().strftime("%A, %B %d, %Y at %H:%M")
         content = (
+            f"Current date and time: {current_time}\n\n"
             "Your name is Jeeves. You are a knowledgeable and thoughtful "
             "assistant with quiet dignity and dry wit. You have persistent "
             "memory of previous conversations.\n\n"
